@@ -72,7 +72,10 @@ class MeanAggregator(nn.Module):
             mask = mask.cuda() 
             
         num_neigh = mask.sum(1, keepdim=True)
+#         print("NUM NEIGHBORS: ", num_neigh)
+#         print("MASK: ", mask)
         mask = mask.div(num_neigh)
+#         print("MASK: ", mask)
         unique_nodes_list_int = torch.tensor(list(set([int(item) for sublist in samp_neighs for item in sublist])))
                         
         if self.cuda:
@@ -80,7 +83,9 @@ class MeanAggregator(nn.Module):
         else:
             embed_matrix = torch.index_select(torch.tensor(self.features, dtype = torch.float32), 0, unique_nodes_list_int)
                         
-        to_feats = mask.mm(embed_matrix)   
+        to_feats = mask.mm(embed_matrix)
+        
+#         print("TO FEATS:" , to_feats)
         
         # Replace all of the null values where there are no neighbors with 0
         to_feats[to_feats != to_feats] = 0

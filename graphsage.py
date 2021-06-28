@@ -28,4 +28,6 @@ class SupervisedGraphSage(nn.Module):
     def loss(self, nodes, labels):
         scores = self.forward(nodes)
         self.scores = scores
-        return self.criterion(scores, labels.squeeze())
+#         print("SCORES: ", scores)
+#         print("LABELS: ", labels)
+        return self.criterion(scores, labels)
