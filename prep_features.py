@@ -2,7 +2,8 @@ import pandas as pd
 import json
 
 
-with open("./data/features_extract.json") as fd:
+# with open("./data/features_extract.json") as fd:
+with open("../RAM/kfold2/kfold2_features_extract.json") as fd:
     feat_data = json.load(fd)  
 feat_data = pd.DataFrame.from_dict(feat_data, orient = 'index').reset_index()
 feat_data["index"] = feat_data["index"].str.split("/").str[5]
@@ -17,5 +18,5 @@ for col, row in feat_data.iterrows():
     features[row.muni_id] = cur_feats
     
     
-with open("./data/features.json", "w") as outfile: 
+with open("./data/kfold2_features.json", "w") as outfile: 
     json.dump(features, outfile)

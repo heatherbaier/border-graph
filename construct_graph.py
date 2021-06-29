@@ -4,7 +4,7 @@ import geograph
 import json
 
 
-with open("./data/features.json") as fd:
+with open("./data/kfold2_features.json") as fd:
     feat_data = json.load(fd)  
     
 with open("../pooling/data/migration_data.json") as l:
@@ -49,5 +49,7 @@ for shapeID in gdf['shapeID'].to_list():
         print("No features for ", muni_id)
     
     
-with open("./data/graph.json", "w") as outfile: 
+with open("./data/kfold2_graph.json", "w") as outfile: 
     json.dump(graph, outfile)
+    
+    

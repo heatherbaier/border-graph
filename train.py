@@ -12,7 +12,7 @@ from graphsage import *
 from encoder import *
 
 
-with open("./data/graph.json") as g:
+with open("./data/kfold2_graph.json") as g:
     graph = json.load(g)
 
 x, adj_lists, y = [], {}, []
@@ -52,7 +52,7 @@ train_indices_b = [train_indices[i * n:(i + 1) * n] for i in range((len(train_in
 val_indices_b   = [val_indices[i * n:(i + 1) * n] for i in range((len(val_indices) + n - 1) // n )] 
 
 
-for epoch in range(0, 200):
+for epoch in range(0, 250):
     
     running_train_loss, running_val_loss = 0, 0
     
@@ -88,7 +88,7 @@ for epoch in range(0, 200):
     
     
 # Validate
-trues, preds = [], []
+trues, preds, tv = [], [], []
 
 for index in val_indices:
     
@@ -104,6 +104,30 @@ for index in val_indices:
         trues.append(y[index][0])
         preds.append(model.scores.item())
         
+        tv.append('val')
+        
+    except:
+        
+        print(index)
+        
+        
+        
+for index in train_indices:
+    
+    try:
+    
+        input = [str(index)]
+        output = torch.tensor(y[index])
+
+        model.eval()
+
+        loss = model.loss(input, output)
+
+        trues.append(y[index][0])
+        preds.append(model.scores.item())
+        
+        tv.append('train')
+        
     except:
         
         print(index)
@@ -112,7 +136,8 @@ for index in val_indices:
 preds_df = pd.DataFrame()
 preds_df['true'], preds_df['pred'] = trues, preds
 preds_df["abs_diff"] = abs(preds_df['true'] - preds_df['pred'])
+preds_df['tv'] = tv
 preds_df
 
 
-preds_df.to_csv("./predictions/graph_preds_v2_validation.csv")
+preds_df.to_csv("./results/kfold2_preds.csv")
